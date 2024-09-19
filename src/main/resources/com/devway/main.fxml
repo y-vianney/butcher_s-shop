@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
+  All rights reserved. Use is subject to license terms.
+
+  This file is available and licensed under the following license:
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the distribution.
+  - Neither the name of Oracle Corporation nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
+
+<StackPane maxHeight="600.0" maxWidth="1100.0" minHeight="600.0" minWidth="1100.0" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.devway.ui.controllers.MainController">
+   <children>
+      <AnchorPane maxHeight="600.0" maxWidth="1100.0" minHeight="600.0" minWidth="1100.0" prefHeight="600.0" prefWidth="1100.0">
+         <children>
+            <BorderPane layoutX="6.0" layoutY="7.0" maxHeight="600.0" maxWidth="1100.0" minHeight="600.0" minWidth="1100.0" prefHeight="600.0" prefWidth="1100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <top>
+                  <AnchorPane prefHeight="35.0" prefWidth="1100.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <AnchorPane layoutX="85.0" layoutY="-79.0" prefHeight="45.0" prefWidth="1100.0" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Label layoutX="18.0" layoutY="5.0" prefHeight="36.0" prefWidth="143.0" text="Application de gestion" textFill="#14105b">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="screenName" layoutX="210.0" layoutY="2.0" prefHeight="40.0" prefWidth="233.0" text="Page">
+                                 <font>
+                                    <Font name="System Bold Italic" size="13.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </AnchorPane>
+               </top>
+               <left>
+                  <AnchorPane prefHeight="565.0" prefWidth="151.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <AnchorPane layoutY="10.0" prefHeight="555.0" prefWidth="151.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0">
+                           <children>
+                              <Label alignment="CENTER" layoutY="-1.0" prefHeight="40.0" prefWidth="151.0" text="Admin">
+                                 <font>
+                                    <Font name="System Bold Italic" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Line endX="43.0" layoutX="79.0" layoutY="47.0" startX="-49.5" strokeWidth="0.5" />
+                              <Button fx:id="homeButton" layoutX="14.0" layoutY="71.0" mnemonicParsing="false" onAction="#switchToHome" prefHeight="35.0" prefWidth="124.0" text="Accueil" />
+                              <Button fx:id="supplierButton" layoutX="14.0" layoutY="113.0" mnemonicParsing="false" onAction="#switchToSupplierScreen" prefHeight="35.0" prefWidth="124.0" text="Fournisseurs" />
+                              <Button fx:id="deliveryButton" layoutX="14.0" layoutY="155.0" mnemonicParsing="false" onAction="#switchToDeliveryScreen" prefHeight="35.0" prefWidth="124.0" text="Livraisons" />
+                              <Button fx:id="logoutButton" layoutX="14.0" layoutY="509.0" mnemonicParsing="false" onAction="#logout" prefHeight="35.0" prefWidth="124.0" style="-fx-background-color: #B74041;" text="Se déconnecter" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="12.0" />
+                                 </font>
+                              </Button>
+                              <Button fx:id="billButton" disable="true" layoutX="14.0" layoutY="196.0" mnemonicParsing="false" onAction="#switchToBillScreen" prefHeight="35.0" prefWidth="124.0" text="Factures" />
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </AnchorPane>
+               </left>
+               <center>
+                  <AnchorPane fx:id="screenBox" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Line endY="489.0" layoutY="41.0" opacity="0.3" startY="-19.0" strokeWidth="0.2" />
+                        <AnchorPane fx:id="homeScreen" layoutX="14.0" layoutY="14.0" prefHeight="532.0" prefWidth="923.0" style="-fx-background-color: #E9E9E9; -fx-background-radius: 5; -fx-border-radius: 5;" visible="false" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+                           <children>
+                              <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="170.0" prefWidth="893.0">
+                                 <children>
+                                    <AnchorPane layoutX="8.0" layoutY="8.0" prefHeight="155.0" prefWidth="183.0" style="-fx-background-color: #E8E8E8; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, #3333, 100, 0, 0, 2);" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="702.0" AnchorPane.topAnchor="8.0">
+                                       <children>
+                                          <Label layoutX="16.0" layoutY="7.0" prefHeight="41.0" prefWidth="148.0" text="Nombres de fournisseurs" underline="true" wrapText="true">
+                                             <font>
+                                                <Font name="System Bold" size="13.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="totalSupplier" alignment="CENTER" contentDisplay="CENTER" layoutX="49.0" layoutY="68.0" prefHeight="73.0" prefWidth="120.0" text="0">
+                                             <font>
+                                                <Font name="System Bold" size="24.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </AnchorPane>
+                                    <AnchorPane layoutX="233.0" layoutY="8.0" prefHeight="155.0" prefWidth="183.0" style="-fx-background-color: #E8E8E8; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, #3333, 100, 0, 0, 2);">
+                                       <children>
+                                          <Label layoutX="16.0" layoutY="7.0" prefHeight="30.0" prefWidth="148.0" text="Nombres de livraisons" underline="true" wrapText="true">
+                                             <font>
+                                                <Font name="System Bold" size="13.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="totalDelivery" alignment="CENTER" contentDisplay="CENTER" layoutX="49.0" layoutY="68.0" prefHeight="73.0" prefWidth="120.0" text="0">
+                                             <font>
+                                                <Font name="System Bold" size="24.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </AnchorPane>
+                                    <AnchorPane layoutX="454.0" layoutY="8.0" prefHeight="155.0" prefWidth="183.0" style="-fx-background-color: #E8E8E8; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, #3333, 100, 0, 0, 2);">
+                                       <children>
+                                          <Label layoutX="16.0" layoutY="10.0" prefHeight="30.0" prefWidth="148.0" text="Profit" underline="true" wrapText="true">
+                                             <font>
+                                                <Font name="System Bold" size="13.0" />
+                                             </font>
+                                          </Label>
+                                          <Label fx:id="profit" alignment="CENTER" contentDisplay="CENTER" layoutX="53.0" layoutY="68.0" prefHeight="73.0" prefWidth="120.0" text="0">
+                                             <font>
+                                                <Font name="System Bold" size="24.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </AnchorPane>
+                                    <AnchorPane layoutX="670.0" layoutY="8.0" prefHeight="154.0" prefWidth="215.0">
+                                       <children>
+                                          <Button fx:id="addDelivery" layoutX="28.0" layoutY="24.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="160.0" text="Enregistrer une livraison" />
+                                          <Button fx:id="addSupplier" layoutX="28.0" layoutY="90.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="160.0" text="Enregistrer un fournisseur" />
+                                       </children>
+                                    </AnchorPane>
+                                 </children>
+                              </AnchorPane>
+                              <BarChart layoutX="22.0" layoutY="209.0" prefHeight="310.0" prefWidth="444.0">
+                                <xAxis>
+                                  <CategoryAxis side="BOTTOM" />
+                                </xAxis>
+                                <yAxis>
+                                  <NumberAxis side="LEFT" />
+                                </yAxis>
+                              </BarChart>
+                              <TableView layoutX="500.0" layoutY="260.0" prefHeight="225.0" prefWidth="373.0">
+                                <columns>
+                                  <TableColumn prefWidth="75.0" text="C1" />
+                                  <TableColumn fx:id="last5TableView" editable="false" prefWidth="75.0" text="C2" />
+                                </columns>
+                              </TableView>
+                              <Label layoutX="516.0" layoutY="225.0" prefHeight="33.0" prefWidth="374.0" text="Récentes livraison - 5 dernières">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="supplierScreen" layoutX="14.0" layoutY="14.0" prefHeight="535.0" prefWidth="922.0" style="-fx-background-radius: 10; -fx-background-color: #E9E9E9; -fx-border-radius: 10;" visible="false">
+                           <children>
+                              <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="111.0" prefWidth="896.0">
+                                 <children>
+                                    <Label layoutX="14.0" layoutY="21.0" prefHeight="30.0" prefWidth="124.0" text="Nom du fournisseur" />
+                                    <TextField fx:id="nameSupplier" layoutX="14.0" layoutY="56.0" prefHeight="32.0" prefWidth="203.0">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                                    <Label layoutX="273.0" layoutY="20.0" prefHeight="30.0" prefWidth="124.0" text="Contact" />
+                                    <TextField fx:id="contactSupplier" layoutX="273.0" layoutY="55.0" prefHeight="32.0" prefWidth="161.0">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                                    <Label layoutX="489.0" layoutY="20.0" prefHeight="30.0" prefWidth="124.0" text="Adresse" />
+                                    <TextField fx:id="addressSupplier" layoutX="489.0" layoutY="55.0" prefHeight="32.0" prefWidth="179.0">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font>
+                                    </TextField>
+                                    <Button fx:id="submitSupplier" layoutX="726.0" layoutY="56.0" onAction="#addSupplier" mnemonicParsing="false" prefHeight="38.0" prefWidth="131.0" style="-fx-background-color: #266AC0;" text="Enregistrer" textFill="WHITE" />
+                                    <Button fx:id="clearSupplierFields" layoutX="726.0" layoutY="14.0" onAction="#clearSupplierFields" mnemonicParsing="false" prefHeight="38.0" prefWidth="131.0" text="Vider" />
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane layoutX="14.0" layoutY="125.0" prefHeight="397.0" prefWidth="894.0">
+                                 <children>
+                                    <TextField fx:id="searchSupplier" prefHeight="33.0" prefWidth="244.0" promptText="Rechercher le nom du fournisseur" />
+                                    <TableView fx:id="suppliersTableView" layoutY="43.0" prefHeight="308.0" prefWidth="903.0" style="-fx-background-radius: 10; -fx-border-radius: 10;">
+                                       <columns>
+                                          <TableColumn prefWidth="44.0" text="#" />
+                                          <TableColumn prefWidth="464.0" text="Nom et prénoms du fournisseur" />
+                                          <TableColumn minWidth="0.0" prefWidth="147.0" text="Contact" />
+                                          <TableColumn prefWidth="247.0" text="Adresse" />
+                                       </columns>
+                                    </TableView>
+                                    <Button fx:id="deleteSupplier" layoutX="765.0" layoutY="360.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="131.0" style="-fx-background-color: #B6B6B6;" text="Supprimer" />
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="deliveryScreen" layoutX="14.0" layoutY="14.0" prefHeight="535.0" prefWidth="921.0" style="-fx-background-radius: 10; -fx-background-color: #E9E9E9; -fx-border-radius: 10;" visible="false">
+                           <children>
+                              <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="127.0" prefWidth="897.0">
+                                 <children>
+                                    <Label layoutX="14.0" layoutY="10.0" text="Fournisseurs" />
+                                    <DatePicker fx:id="deliveryDate" layoutX="14.0" layoutY="83.0" prefHeight="31.0" prefWidth="186.0" promptText="Date de livraison" />
+                                    <Label layoutX="249.0" layoutY="10.0" text="Description" />
+                                    <Label layoutX="476.0" layoutY="10.0" text="Montant" />
+                                    <TextArea fx:id="deliveryDescription" layoutX="249.0" layoutY="35.0" prefHeight="79.0" prefWidth="200.0" />
+                                    <TextField fx:id="deliveryAmount" layoutX="476.0" layoutY="34.0" prefHeight="32.0" prefWidth="187.0" />
+                                    <ComboBox layoutX="14.0" layoutY="35.0" prefHeight="34.0" prefWidth="187.0" />
+                                    <Button fx:id="submitDelivery" layoutX="760.0" layoutY="73.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="124.0" style="-fx-background-color: #266AC0;" text="Enregistrer" textFill="WHITE" />
+                                 </children>
+                              </AnchorPane>
+                              <AnchorPane layoutX="14.0" layoutY="141.0" prefHeight="381.0" prefWidth="892.0">
+                                 <children>
+                                    <TableView fx:id="deliveriesTableView" layoutX="7.0" layoutY="51.0" prefHeight="288.0" prefWidth="879.0">
+                                      <columns>
+                                        <TableColumn prefWidth="55.0" text="#" />
+                                        <TableColumn prefWidth="306.0" text="Description" />
+                                          <TableColumn prefWidth="247.0" text="Fournisseur" />
+                                          <TableColumn prefWidth="129.0" text="Montant" />
+                                          <TableColumn prefWidth="140.0" text="Date" />
+                                      </columns>
+                                    </TableView>
+                                    <TextField fx:id="searchDelivery" layoutX="7.0" layoutY="9.0" prefHeight="33.0" prefWidth="364.0" promptText="Rechercher le nom du fournisseur, un montant ou une date" />
+                                    <Button fx:id="deleteDelivery" layoutX="756.0" layoutY="347.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="129.0" style="-fx-background-color: #B6B6B6;" text="Supprimer" />
+                                 </children>
+                              </AnchorPane>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </AnchorPane>
+               </center>
+            </BorderPane>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>
