@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,8 +21,11 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 
 public class BaseController {
+    final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    static final String SUPPLIER_MODEL = "supplier";
+    static final String DELIVERY_MODEL = "delivery";
     Gson gson = new Gson();
-    private String dataFolder = ".data/";
+    private final String dataFolder = ".data/";
     private Alert alert;
 
     protected void switchTo(AnchorPane screen, List<AnchorPane> screens) throws IOException {
@@ -139,8 +143,9 @@ public class BaseController {
     }    
 
     protected <T> List<T> readData(String model, Class<T[]> clazz) {
-        String filename = dataFolder + model + ".json";
         List<T> data = new ArrayList<>();
+
+        String filename = dataFolder + model + ".json";
 
         try (Reader reader = new FileReader(filename)) {
             T[] array = gson.fromJson(reader, clazz);

@@ -9,17 +9,26 @@ public class Delivery {
     private LocalDate deliveryDate;
     private double amount;
     private Supplier supplier;
+    private final int deliveryID;
 
     // Constructor
     public Delivery() {
+        deliveryCount++;
         this.description = null;
         this.deliveryDate = null;
         this.amount = 0.0;
         this.supplier = new Supplier();
-        this.deliveryCount++;
+        this.deliveryID = deliveryCount;
     }
 
     // Getters and Setters
+    public void setData(Double amount, String description, LocalDate deliveryDate, Supplier supplier) {
+        this.setAmount(amount);
+        this.setDescription(description);
+        this.setDeliveryDate(deliveryDate);
+        this.setSupplier(supplier);
+    }
+
     public String getDescription() {
         return description;
     }
@@ -50,6 +59,10 @@ public class Delivery {
 
     public void setSupplier(Supplier supplier) {
         this.supplier = supplier;
+    }
+
+    public int getDeliveryID() {
+        return deliveryID;
     }
 }
 

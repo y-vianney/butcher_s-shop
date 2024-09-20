@@ -6,13 +6,15 @@ public class Supplier {
     private String name;
     private String contact;
     private String address;
+    private final int supplierID;
 
     // Constructor
     public Supplier() {
+        supplierCount++;
         this.name = null;
         this.contact = null;
         this.address = null;
-        this.supplierCount++;
+        this.supplierID = supplierCount;
     }
 
     // Getters and Setters
@@ -44,6 +46,10 @@ public class Supplier {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public int getSupplierID() {
+        return supplierID;
     }
 }
 

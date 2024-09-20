@@ -59,7 +59,7 @@
                      <children>
                         <AnchorPane layoutX="85.0" layoutY="-79.0" prefHeight="45.0" prefWidth="1100.0" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <children>
-                              <Label layoutX="18.0" layoutY="5.0" prefHeight="36.0" prefWidth="143.0" text="Application de gestion" textFill="#14105b">
+                              <Label layoutX="14.0" layoutY="4.0" prefHeight="36.0" prefWidth="143.0" text="Application de gestion" textFill="#14105b">
                                  <font>
                                     <Font size="14.0" />
                                  </font>
@@ -103,7 +103,7 @@
                   <AnchorPane fx:id="screenBox" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
                         <Line endY="489.0" layoutY="41.0" opacity="0.3" startY="-19.0" strokeWidth="0.2" />
-                        <AnchorPane fx:id="homeScreen" layoutX="14.0" layoutY="14.0" prefHeight="532.0" prefWidth="923.0" style="-fx-background-color: #E9E9E9; -fx-background-radius: 5; -fx-border-radius: 5;" visible="false" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+                        <AnchorPane fx:id="homeScreen" layoutX="14.0" layoutY="14.0" prefHeight="532.0" prefWidth="923.0" style="-fx-background-color: #E9E9E9; -fx-background-radius: 5; -fx-border-radius: 5;" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
                            <children>
                               <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="170.0" prefWidth="893.0">
                                  <children>
@@ -200,8 +200,8 @@
                                           <Font size="14.0" />
                                        </font>
                                     </TextField>
-                                    <Button fx:id="submitSupplier" layoutX="726.0" layoutY="56.0" onAction="#addSupplier" mnemonicParsing="false" prefHeight="38.0" prefWidth="131.0" style="-fx-background-color: #266AC0;" text="Enregistrer" textFill="WHITE" />
-                                    <Button fx:id="clearSupplierFields" layoutX="726.0" layoutY="14.0" onAction="#clearSupplierFields" mnemonicParsing="false" prefHeight="38.0" prefWidth="131.0" text="Vider" />
+                                    <Button fx:id="submitSupplier" layoutX="726.0" layoutY="56.0" mnemonicParsing="false" onAction="#addSupplier" prefHeight="38.0" prefWidth="131.0" style="-fx-background-color: #266AC0;" text="Enregistrer" textFill="WHITE" />
+                                    <Button fx:id="clearSupplierFields" layoutX="726.0" layoutY="14.0" mnemonicParsing="false" onAction="#clearSupplierFields" prefHeight="38.0" prefWidth="131.0" text="Vider" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane layoutX="14.0" layoutY="125.0" prefHeight="397.0" prefWidth="894.0">
@@ -209,10 +209,10 @@
                                     <TextField fx:id="searchSupplier" prefHeight="33.0" prefWidth="244.0" promptText="Rechercher le nom du fournisseur" />
                                     <TableView fx:id="suppliersTableView" layoutY="43.0" prefHeight="308.0" prefWidth="903.0" style="-fx-background-radius: 10; -fx-border-radius: 10;">
                                        <columns>
-                                          <TableColumn prefWidth="44.0" text="#" />
-                                          <TableColumn prefWidth="464.0" text="Nom et prénoms du fournisseur" />
-                                          <TableColumn minWidth="0.0" prefWidth="147.0" text="Contact" />
-                                          <TableColumn prefWidth="247.0" text="Adresse" />
+                                          <TableColumn fx:id="idSupplierCol" prefWidth="44.0" text="#" />
+                                          <TableColumn fx:id="nameSupplierCol" prefWidth="464.0" text="Nom et prénoms du fournisseur" />
+                                          <TableColumn fx:id="contactSupplierCol" minWidth="0.0" prefWidth="147.0" text="Contact" />
+                                          <TableColumn fx:id="addrSupplierCol" prefWidth="247.0" text="Adresse" />
                                        </columns>
                                     </TableView>
                                     <Button fx:id="deleteSupplier" layoutX="765.0" layoutY="360.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="131.0" style="-fx-background-color: #B6B6B6;" text="Supprimer" />
@@ -230,19 +230,19 @@
                                     <Label layoutX="476.0" layoutY="10.0" text="Montant" />
                                     <TextArea fx:id="deliveryDescription" layoutX="249.0" layoutY="35.0" prefHeight="79.0" prefWidth="200.0" />
                                     <TextField fx:id="deliveryAmount" layoutX="476.0" layoutY="34.0" prefHeight="32.0" prefWidth="187.0" />
-                                    <ComboBox layoutX="14.0" layoutY="35.0" prefHeight="34.0" prefWidth="187.0" />
-                                    <Button fx:id="submitDelivery" layoutX="760.0" layoutY="73.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="124.0" style="-fx-background-color: #266AC0;" text="Enregistrer" textFill="WHITE" />
+                                    <ComboBox fx:id="comboSuppliers" layoutX="14.0" layoutY="35.0" prefHeight="34.0" prefWidth="187.0" />
+                                    <Button fx:id="submitDelivery" layoutX="760.0" layoutY="73.0" onAction="#addDelivery" mnemonicParsing="false" prefHeight="41.0" prefWidth="124.0" style="-fx-background-color: #266AC0;" text="Enregistrer" textFill="WHITE" />
                                  </children>
                               </AnchorPane>
                               <AnchorPane layoutX="14.0" layoutY="141.0" prefHeight="381.0" prefWidth="892.0">
                                  <children>
                                     <TableView fx:id="deliveriesTableView" layoutX="7.0" layoutY="51.0" prefHeight="288.0" prefWidth="879.0">
                                       <columns>
-                                        <TableColumn prefWidth="55.0" text="#" />
-                                        <TableColumn prefWidth="306.0" text="Description" />
-                                          <TableColumn prefWidth="247.0" text="Fournisseur" />
-                                          <TableColumn prefWidth="129.0" text="Montant" />
-                                          <TableColumn prefWidth="140.0" text="Date" />
+                                        <TableColumn fx:id="idDeliveryCol" prefWidth="55.0" text="#" />
+                                        <TableColumn fx:id="descriptionDeliveryCol" prefWidth="306.0" text="Description" />
+                                          <TableColumn fx:id="supplierDeliveryCol" prefWidth="247.0" text="Fournisseur" />
+                                          <TableColumn fx:id="amountDeliveryCol" prefWidth="129.0" text="Montant" />
+                                          <TableColumn fx:id="dateDeliveryCol" prefWidth="140.0" text="Date" />
                                       </columns>
                                     </TableView>
                                     <TextField fx:id="searchDelivery" layoutX="7.0" layoutY="9.0" prefHeight="33.0" prefWidth="364.0" promptText="Rechercher le nom du fournisseur, un montant ou une date" />

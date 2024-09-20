@@ -4,17 +4,19 @@ import java.time.LocalDate;
 
 
 public class Bill {
-    static int billID = 0;
+    static int billCount = 0;
     private Supplier supplier;
     private LocalDate date;
     private Delivery delivery;
+    private final int billID;
 
     // Constructor
     public Bill() {
+        billCount++;
         this.supplier = new Supplier();
         this.date = null;
         this.delivery = new Delivery();
-        this.billID++;
+        this.billID = billCount;
     }
 
     // Getters and Setters
@@ -40,6 +42,10 @@ public class Bill {
 
     public void setDelivery(Delivery delivery) {
         this.delivery = delivery;
+    }
+
+    public int getBillID() {
+        return billID;
     }
 }
 
