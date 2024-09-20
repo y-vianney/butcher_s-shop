@@ -2,28 +2,28 @@ package com.devway.model;
 
 
 public class Supplier {
-    static int supplierCount = 0;
+    private static int supplierCount = 0;
     private String name;
     private String contact;
     private String address;
-    private final int supplierID;
+    private int supplierID;
 
     // Constructor
     public Supplier() {
-        supplierCount++;
         this.name = null;
         this.contact = null;
         this.address = null;
-        this.supplierID = supplierCount;
+        this.supplierID = ++supplierCount;
+    }
+
+    // Set data method
+    public void setData(String name, String contact, String address) {
+        this.name = name;
+        this.contact = contact;
+        this.address = address;
     }
 
     // Getters and Setters
-    public void setData(String name, String contact, String address) {
-        this.setName(name);
-        this.setAddress(address);
-        this.setContact(contact);
-    }
-
     public String getName() {
         return name;
     }
@@ -51,5 +51,8 @@ public class Supplier {
     public int getSupplierID() {
         return supplierID;
     }
-}
 
+    public void setID(int ID) {
+        this.supplierID = ID;
+    }
+}

@@ -1,52 +1,51 @@
 package com.devway.ui.controllers;
 
-import com.devway.model.Bill;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
-import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
+import com.devway.model.Bill;
 import com.devway.model.Delivery;
 import com.devway.model.Supplier;
 import javafx.util.StringConverter;
 
-
 public class MainController extends BaseController {
 
     @FXML
-    public TableColumn idSupplierCol;
+    public TableColumn<Supplier, String> idSupplierCol;
 
     @FXML
-    public TableColumn nameSupplierCol;
+    public TableColumn<Supplier, String> nameSupplierCol;
 
     @FXML
-    public TableColumn contactSupplierCol;
+    public TableColumn<Supplier, String> contactSupplierCol;
 
     @FXML
-    public TableColumn addrSupplierCol;
+    public TableColumn<Supplier, String> addrSupplierCol;
 
     @FXML
-    public TableColumn idDeliveryCol;
+    public TableColumn<Delivery, String> idDeliveryCol;
 
     @FXML
-    public TableColumn descriptionDeliveryCol;
+    public TableColumn<Delivery, String> descriptionDeliveryCol;
 
     @FXML
-    public TableColumn supplierDeliveryCol;
+    public TableColumn<Delivery, String> supplierDeliveryCol;
 
     @FXML
-    public TableColumn amountDeliveryCol;
+    public TableColumn<Delivery, String> amountDeliveryCol;
 
     @FXML
-    public TableColumn dateDeliveryCol;
+    public TableColumn<Delivery, String> dateDeliveryCol;
 
     @FXML
     private AnchorPane homeScreen;
@@ -81,7 +80,6 @@ public class MainController extends BaseController {
 
     private FilteredList<Supplier> filteredSuppliersData;
 
-
     // Delivery elements
     @FXML
     private TextArea deliveryDescription;
@@ -101,17 +99,18 @@ public class MainController extends BaseController {
     @FXML
     public ComboBox<Supplier> comboSuppliers;
 
-//    @FXML
-//    private Button clearDeliveryFields;
+    @FXML
+    private Button clearDeliveryFields;
 
     @FXML
     private TableView<Delivery> deliveriesTableView;
 
     private FilteredList<Delivery> filteredDeliveriesData;
 
+    // Bill elements
+    private FilteredList<Bill> filteredBillsData;
 
     private List<AnchorPane> screenList;
-
 
     // Methods
     // Navigators
@@ -135,13 +134,11 @@ public class MainController extends BaseController {
         //
     }
 
-
     // Authentication
     @FXML
     private void logout() throws IOException {
         //
     }
-
 
     // Main methods
     // Supplier
@@ -151,7 +148,7 @@ public class MainController extends BaseController {
             Supplier supplier = new Supplier();
 
             supplier.setData(nameSupplier.getText(), contactSupplier.getText(), addressSupplier.getText());
-            writeToFile(SUPPLIER_MODEL, supplier);
+            writeToFile(SUPPLIER_MODEL, Arrays.asList(supplier), Supplier[].class, (selectedRow != null));
         }
     }
 
@@ -162,25 +159,99 @@ public class MainController extends BaseController {
         addressSupplier.setText(null);
     }
 
+    @FXML
+    private void delSupplier() throws IOException {
+        try {
+            Supplier data = suppliersTableView.getSelectionModel().getSelectedItem();
+            boolean isRemoved = removeOne(SUPPLIER_MODEL, Supplier[].class, data);
+
+            Alert alert;
+            if (isRemoved) {
+                alert = new Alert(AlertType.CONFIRMATION);
+                alert.setContentText("L'enregistrement a été supprimé.");
+            } else {
+                alert = new Alert(AlertType.ERROR);
+                alert.setContentText("Une erreur s'est produite lors de la suppression de l'enregistrement.");
+            }
+            alert.showAndWait();
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+    }
+
     // Delivery
     @FXML
     private void addDelivery() throws IOException {
         if (deliveryDescription != null && deliveryAmount != null && addressSupplier != null) {
             Delivery delivery = new Delivery();
 
-            delivery.setData(Double.parseDouble(deliveryAmount.getText()), deliveryDescription.getText(), deliveryDate.getValue(), comboSuppliers.getSelectionModel().getSelectedItem());
-            writeToFile(DELIVERY_MODEL, delivery);
+            delivery.setData(Double.parseDouble(deliveryAmount.getText()), deliveryDescription.getText(),
+                    deliveryDate.getValue().format(formatter), comboSuppliers.getSelectionModel().getSelectedItem());
+            writeToFile(DELIVERY_MODEL, Arrays.asList(delivery), Delivery[].class, false);
         }
     }
 
     @FXML
+    private void delDelivery() throws IOException {
+        try {
+            Delivery data = deliveriesTableView.getSelectionModel().getSelectedItem();
+            boolean isRemoved = removeOne(DELIVERY_MODEL, Delivery[].class, data);
+
+            Alert alert;
+            if (isRemoved) {
+                alert = new Alert(AlertType.CONFIRMATION);
+                alert.setContentText("L'enregistrement a été supprimé.");
+            } else {
+                alert = new Alert(AlertType.ERROR);
+                alert.setContentText("Une erreur s'est produite lors de la suppression de l'enregistrement.");
+            }
+            alert.showAndWait();
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+    }
+
+    // init method
+    @FXML
     public void initialize() {
         screenList = Arrays.asList(homeScreen, supplierScreen, deliveryScreen);
-        ObservableList<Supplier> supplierList = FXCollections.observableArrayList(readData("supplier", Supplier[].class));
-        ObservableList<Delivery> deliveryList = FXCollections.observableArrayList(readData("delivery", Delivery[].class));
-//        ObservableList<Bill> billList = FXCollections.observableArrayList(readData("bill", Bill[].class));
         filteredSuppliersData = new FilteredList<>(supplierList, n -> true);
         filteredDeliveriesData = new FilteredList<>(deliveryList, n -> true);
+
+        suppliersTableView.setRowFactory(tv -> {
+            TableRow<Supplier> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty()) {
+                    selectedRow = row.getItem();
+                }
+            });
+
+            return row;
+        });
+
+        deliveriesTableView.setRowFactory(tv -> {
+            TableRow<Delivery> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty()) {
+                    selectedRow = row.getItem();
+                }
+            });
+
+            return row;
+        });
+
+        if (selectedRow != null) {
+            if (selectedRow instanceof Supplier) {
+                nameSupplier.setText(((Supplier) selectedRow).getName());
+                contactSupplier.setText(((Supplier) selectedRow).getContact());
+                addressSupplier.setText(((Supplier) selectedRow).getAddress());
+            } else if (selectedRow instanceof Delivery) {
+                deliveryDescription.setText(((Delivery) selectedRow).getDescription());
+                deliveryAmount.setText(String.valueOf(((Delivery) selectedRow).getAmount()));
+                deliveryDate.setValue(LocalDate.parse(((Delivery) selectedRow).getDescription()));
+                comboSuppliers.getSelectionModel().select(((Delivery) selectedRow).getSupplier());
+            }
+        }
 
         idSupplierCol.setCellValueFactory(new PropertyValueFactory<>("supplierID"));
         nameSupplierCol.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -192,14 +263,8 @@ public class MainController extends BaseController {
         descriptionDeliveryCol.setCellValueFactory(new PropertyValueFactory<>("description"));
         dateDeliveryCol.setCellValueFactory(new PropertyValueFactory<>("deliveryDate"));
         amountDeliveryCol.setCellValueFactory(new PropertyValueFactory<>("amount"));
-        supplierDeliveryCol.setCellValueFactory(new PropertyValueFactory<>("supplier"));
+        supplierDeliveryCol.setCellValueFactory(new PropertyValueFactory<>("supplierName"));
         deliveriesTableView.setItems(filteredDeliveriesData);
-
-//        idSupplierCol.setCellValueFactory(new PropertyValueFactory<>("billID"));
-//        nameSupplierCol.setCellValueFactory(new PropertyValueFactory<>("date"));
-//        contactSupplierCol.setCellValueFactory(new PropertyValueFactory<>("delivery"));
-//        addrSupplierCol.setCellValueFactory(new PropertyValueFactory<>("supplier"));
-//        suppliersTableView.setItems(filteredSuppliersData);
 
         comboSuppliers.setItems(filteredSuppliersData);
         comboSuppliers.setConverter(new StringConverter<Supplier>() {

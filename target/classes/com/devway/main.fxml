@@ -215,7 +215,7 @@
                                           <TableColumn fx:id="addrSupplierCol" prefWidth="247.0" text="Adresse" />
                                        </columns>
                                     </TableView>
-                                    <Button fx:id="deleteSupplier" layoutX="765.0" layoutY="360.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="131.0" style="-fx-background-color: #B6B6B6;" text="Supprimer" />
+                                    <Button fx:id="deleteSupplier" layoutX="765.0" layoutY="360.0" onAction="#delSupplier" mnemonicParsing="false" prefHeight="37.0" prefWidth="131.0" style="-fx-background-color: #B6B6B6;" text="Supprimer" />
                                  </children>
                               </AnchorPane>
                            </children>
@@ -246,7 +246,7 @@
                                       </columns>
                                     </TableView>
                                     <TextField fx:id="searchDelivery" layoutX="7.0" layoutY="9.0" prefHeight="33.0" prefWidth="364.0" promptText="Rechercher le nom du fournisseur, un montant ou une date" />
-                                    <Button fx:id="deleteDelivery" layoutX="756.0" layoutY="347.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="129.0" style="-fx-background-color: #B6B6B6;" text="Supprimer" />
+                                    <Button fx:id="deleteDelivery" layoutX="756.0" layoutY="347.0" onAction="#delDelivery" mnemonicParsing="false" prefHeight="33.0" prefWidth="129.0" style="-fx-background-color: #B6B6B6;" text="Supprimer" />
                                  </children>
                               </AnchorPane>
                            </children>

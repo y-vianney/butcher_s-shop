@@ -8,15 +8,14 @@ public class Bill {
     private Supplier supplier;
     private LocalDate date;
     private Delivery delivery;
-    private final int billID;
+    private int billID;
 
     // Constructor
     public Bill() {
-        billCount++;
         this.supplier = new Supplier();
         this.date = null;
         this.delivery = new Delivery();
-        this.billID = billCount;
+        this.billID = ++billCount;
     }
 
     // Getters and Setters

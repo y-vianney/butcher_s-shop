@@ -5,28 +5,42 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
-import java.nio.file.Files;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import com.devway.model.Bill;
 import com.devway.model.Delivery;
 import com.devway.model.Supplier;
 import com.google.gson.Gson;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 
 public class BaseController {
-    final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     static final String SUPPLIER_MODEL = "supplier";
     static final String DELIVERY_MODEL = "delivery";
+    static final String BILL_MODEL = "bill";
+    static final String DATA_FOLDER = ".data/";
     Gson gson = new Gson();
-    private final String dataFolder = ".data/";
-    private Alert alert;
+    protected Alert alert;
+
+    Object selectedRow = null;
+
+    ObservableList<Supplier> supplierList = FXCollections
+            .observableArrayList(readData(SUPPLIER_MODEL, Supplier[].class));
+    ObservableList<Delivery> deliveryList = FXCollections
+            .observableArrayList(readData(DELIVERY_MODEL, Delivery[].class));
+    ObservableList<Bill> billList = FXCollections
+            .observableArrayList(readData(BILL_MODEL, Bill[].class));
 
     protected void switchTo(AnchorPane screen, List<AnchorPane> screens) throws IOException {
         if (screens != null) {
@@ -37,115 +51,89 @@ public class BaseController {
         }
     }
 
-    protected void writeToFile(String model, Object data) {
-        if (!isValidModel(model, data)) {
-            throw new IllegalArgumentException("Invalid data for " + model);
-        }
+    protected <T> void writeToFile(String model, List<T> data, Class<T[]> clazz, boolean overwrite) {
 
-        boolean isExisting = false;
-        String which = "";
-        switch (model) {
-            case "supplier":
-                isExisting = isExisting(model, Supplier[].class, (Supplier) data);
-                which = "Fournisseur";
-                break;
+        if (!overwrite && this.isExisting(model, clazz, data.get(0))) {
+            alert = new Alert(AlertType.WARNING);
+            alert.setContentText("Un enregistrement (" + model + "), avec ces informations, existe déjà");
+        } else {
+            File file = new File(DATA_FOLDER + model + ".json");
 
-            case "delivery":
-                isExisting = isExisting(model, Delivery[].class, (Delivery) data);
-                which = "Livraison";
-                break;
+            List<T> existingData = readData(model, clazz);
 
-            default:
-                break;
-        }
-
-        if (!isExisting) {
-            File file = new File(dataFolder + model + ".json");
-            boolean isNewFile = !file.exists() || file.length() == 0;
-
-            if (isNewFile) {
-                // If the file is new, create it and write the opening bracket
-                try (FileWriter writer = new FileWriter(file)) {
-                    writer.write("[\n");
-                    gson.toJson(data, writer);
-                    writer.write("\n]");
-                    System.out.println("Data written to " + model + ".json");
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                // If the file already exists, read its content to remove the last line
-                try {
-                    List<String> lines = Files.readAllLines(file.toPath());
-                    if (lines.size() > 1) {
-                        lines.remove(lines.size() - 1);
-                    }
-
-                    try (FileWriter writer = new FileWriter(file)) {
-                        for (String line : lines) {
-                            writer.write(line + "\n");
-                        }
-                        writer.write(",\n"); // Add a comma before the new entry
-                        gson.toJson(data, writer);
-                        writer.write("\n]"); // Close the array
-                        System.out.println("Data appended to " + model + ".json");
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+            // Combine existing data with new data if not overwriting
+            if (!overwrite) {
+                if (existingData != null) {
+                    System.out.println(existingData);
+                    existingData.addAll(data);
+                    data = existingData;
+                } else {
+                    data = new ArrayList<>(data);
                 }
             }
-        } else {
-            alert = new Alert(AlertType.WARNING);
-            alert.setContentText("Un enregistrement (" + which + "), avec ces informations, existe déjà.");
-            alert.show();
-        }
-    }
 
-    private boolean isValidModel(String model, Object data) {
-        switch (model.toLowerCase()) {
-            case "supplier":
-                return data instanceof Supplier;
-            case "delivery":
-                return data instanceof Delivery;
-            case "bill":
-                return data instanceof Bill;
-            default:
-                return false;
+            // Write the entire list as a single JSON array
+            try (FileWriter writer = new FileWriter(file)) {
+                writer.write(gson.toJson(data));
+                System.out.println("Data written to " + model + ".json");
+
+                switch (model) {
+                    case SUPPLIER_MODEL:
+                        supplierList.clear();
+                        supplierList.addAll(readData(SUPPLIER_MODEL, Supplier[].class));
+                        break;
+
+                    case DELIVERY_MODEL:
+                        deliveryList.clear();
+                        deliveryList.addAll(readData(DELIVERY_MODEL, Delivery[].class));
+                        break;
+
+                    case BILL_MODEL:
+                        billList.clear();
+                        billList.addAll(readData(BILL_MODEL, Bill[].class));
+                        break;
+
+                    default:
+                        break;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     private <T> boolean isExisting(String model, Class<T[]> clazz, T data) {
         List<T> fileData = this.readData(model, clazz);
-    
+
         if (fileData != null) {
             for (T item : fileData) {
                 if (item instanceof Supplier && data instanceof Supplier) {
                     Supplier existingSupplier = (Supplier) item;
                     Supplier newSupplier = (Supplier) data;
-    
+
                     if (existingSupplier.getName().equals(newSupplier.getName()) ||
-                        existingSupplier.getContact().equals(newSupplier.getContact())) {
+                            existingSupplier.getContact().equals(newSupplier.getContact())) {
                         return true;
                     }
                 } else if (item instanceof Delivery && data instanceof Delivery) {
                     Delivery existingDelivery = (Delivery) item;
                     Delivery newDelivery = (Delivery) data;
-    
+
                     if (existingDelivery.getDeliveryDate().equals(newDelivery.getDeliveryDate()) ||
-                        existingDelivery.getSupplier().getName().equals(newDelivery.getSupplier().getName())) {
+                            existingDelivery.getSupplier().getName().equals(newDelivery.getSupplier().getName())) {
                         return true;
                     }
                 }
             }
         }
-    
+
         return false;
-    }    
+    }
 
     protected <T> List<T> readData(String model, Class<T[]> clazz) {
         List<T> data = new ArrayList<>();
 
-        String filename = dataFolder + model + ".json";
+        String filename = DATA_FOLDER + model + ".json";
 
         try (Reader reader = new FileReader(filename)) {
             T[] array = gson.fromJson(reader, clazz);
@@ -158,4 +146,90 @@ public class BaseController {
 
         return data;
     }
+
+    protected <T> boolean removeOne(String model, Class<T[]> clazz, T data) {
+        List<T> fileData = this.readData(model, clazz);
+
+        if (this.isRemovable(model, data, fileData)) {
+            if (fileData != null) {
+                List<T> updatedList = new ArrayList<>();
+                boolean itemRemoved = false;
+    
+                for (T item : fileData) {
+                    if (item instanceof Supplier && data instanceof Supplier) {
+                        Supplier existingSupplier = (Supplier) item;
+                        Supplier supplierToDelete = (Supplier) data;
+    
+                        // Check for matches based on name or contact
+                        if (existingSupplier.getName().equals(supplierToDelete.getName()) ||
+                                existingSupplier.getContact().equals(supplierToDelete.getContact())) {
+                            itemRemoved = true;
+                            continue;
+                        }
+                    }
+                    updatedList.add(item);
+                }
+    
+                this.writeToFile(model, updatedList, clazz, true);
+                return itemRemoved;
+            }
+        } else {
+            System.err.println("Integrity error");
+        }
+
+        return false;
+    }
+
+    protected <T> boolean isRemovable(String model, T current, List<T> others) {
+        Map<String, Function<T, Boolean>> modelCheckers = new HashMap<>();
+        modelCheckers.put(SUPPLIER_MODEL, cur -> isCurrentLinkedToSupplier(cur));
+        modelCheckers.put(DELIVERY_MODEL, cur -> isCurrentLinkedToDelivery(cur));
+        modelCheckers.put(BILL_MODEL, cur -> isCurrentLinkedToBill(cur));
+
+        for (String filename : modelCheckers.keySet()) {
+            if (!filename.equals(model) && modelCheckers.get(filename).apply(current)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    // Helper methods for checking relationships
+    private boolean isCurrentLinkedToSupplier(Object current) {
+        List<Supplier> suppliers = readData(SUPPLIER_MODEL, Supplier[].class);
+        if (current instanceof Delivery) {
+            return suppliers.stream()
+                    .anyMatch(s -> s.getSupplierID() == ((Delivery) current).getSupplier().getSupplierID());
+        } else if (current instanceof Bill) {
+            return suppliers.stream()
+                    .anyMatch(s -> s.getSupplierID() == ((Bill) current).getSupplier().getSupplierID());
+        }
+        return false;
+    }
+
+    private boolean isCurrentLinkedToDelivery(Object current) {
+        List<Delivery> deliveries = readData(DELIVERY_MODEL, Delivery[].class);
+        if (current instanceof Supplier) {
+            return deliveries.stream()
+                    .anyMatch(d -> d.getSupplier().getSupplierID() == ((Supplier) current).getSupplierID());
+        } else if (current instanceof Bill) {
+            return deliveries.stream()
+                    .anyMatch(d -> d.getSupplier().getSupplierID() == ((Bill) current).getSupplier().getSupplierID());
+        }
+        return false;
+    }
+
+    private boolean isCurrentLinkedToBill(Object current) {
+        List<Bill> bills = readData(BILL_MODEL, Bill[].class);
+        if (current instanceof Supplier) {
+            return bills.stream()
+                    .anyMatch(b -> b.getSupplier().getSupplierID() == ((Supplier) current).getSupplierID());
+        } else if (current instanceof Delivery) {
+            return bills.stream()
+                    .anyMatch(
+                            b -> b.getSupplier().getSupplierID() == ((Delivery) current).getSupplier().getSupplierID());
+        }
+        return false;
+    }
+
 }
