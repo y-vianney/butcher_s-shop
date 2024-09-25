@@ -5,15 +5,19 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
-//import com.devway.model.Bill;
+import com.devway.model.Bill;
 import com.devway.model.Delivery;
+import com.devway.model.Merchandise;
+import com.devway.model.MerchandiseStore;
 import com.devway.model.Supplier;
 import javafx.util.StringConverter;
 
@@ -119,7 +123,35 @@ public class MainController extends BaseController {
     private FilteredList<Delivery> filteredDeliveriesData;
 
     // Bill elements
-//    private FilteredList<Bill> filteredBillsData;
+    @FXML
+    private Button addMerch;
+
+    @FXML
+    private Button addBill;
+
+    @FXML
+    private Button printBill;
+
+    @FXML
+    private TextField merchName;
+
+    @FXML
+    private TextField merchPrice;
+
+    @FXML
+    private TextField merchQt;
+
+    @FXML
+    private Label billDateField;
+
+    @FXML
+    private ComboBox<Supplier> homeComboSuppliers;
+
+    @FXML
+    private Button homeClearFields;
+
+    @FXML
+    private TextField billTotal;
 
     private List<AnchorPane> screenList;
 
@@ -158,6 +190,79 @@ public class MainController extends BaseController {
     }
 
     // Main methods
+    @FXML
+    private void addMerch() {
+        if (merchName.getText() == null || merchPrice.getText() == null || merchQt.getText() == null) {
+            alert = new Alert(AlertType.WARNING);
+            alert.setContentText("Tous les champs doivent être renseignés.");
+        } else {
+            try {
+                Double price = Double.parseDouble(merchPrice.getText());
+                int qt = Integer.parseInt(merchQt.getText());
+
+                Merchandise merch = new Merchandise(merchName.getText(), price, qt);
+                merchStore.addMerchandise("BUTM-" + System.currentTimeMillis(), merch);
+                homeClearFields();
+
+                totalBill += price * qt;
+            } catch (Exception e) {
+                // System.err.println(e);
+                if (e instanceof NumberFormatException) {
+                    alert = new Alert(AlertType.ERROR);
+                    alert.setContentText("Le prix et la quantité doivent être des nombres.");
+                }
+            }
+        }
+
+        if (alert != null) alert.showAndWait();
+        billTotal.setText(String.valueOf(totalBill) + " F");
+    }
+
+    @FXML
+    private void addBill() {
+        if (homeComboSuppliers.getSelectionModel().getSelectedItem() != null) {
+            String deliveryDesc = "";
+            Double amount = 0.0;
+            Delivery delivery = new Delivery();
+            Supplier supplier = homeComboSuppliers.getSelectionModel().getSelectedItem();
+
+            for (Map.Entry<String, Merchandise> entry : merchStore.getStore().entrySet()) {
+                deliveryDesc += " " + entry.getValue().getName() + ": " + entry.getValue().getQuantity() + ";";
+                amount += entry.getValue().getPrice() * entry.getValue().getQuantity();
+            }
+
+            delivery.setData(amount, deliveryDesc, billDateField.getText(), supplier);
+            writeToFile(DELIVERY_MODEL, List.of(delivery), Delivery[].class, false);
+
+            Bill bill = new Bill();
+            bill.setData(supplier, billDateField.getText(), delivery);
+            writeToFile(BILL_MODEL, List.of(bill), Bill[].class, false);
+
+            alert = new Alert(AlertType.INFORMATION);
+            alert.setContentText("Facture enregistrée.");
+        } else {
+            alert = new Alert(AlertType.WARNING);
+            alert.setContentText("Sélectionnez un fournisseur.");
+        }
+
+        homeClearFields();
+        alert.showAndWait();
+        totalBill = 0.0;
+    }
+
+    @FXML
+    private void printBill() {
+        merchStore.displayMerchandise(totalBill, 1000.0);
+    }
+
+    @FXML
+    private void homeClearFields() {
+        merchName.setText(null);
+        merchPrice.setText(null);
+        merchQt.setText(null);
+        homeComboSuppliers.getSelectionModel().clearSelection();
+    }
+
     // Supplier
     @FXML
     private void addSupplier() throws IOException {
@@ -165,7 +270,8 @@ public class MainController extends BaseController {
             Supplier supplier = new Supplier();
 
             supplier.setData(nameSupplier.getText(), contactSupplier.getText(), addressSupplier.getText());
-            writeToFile(SUPPLIER_MODEL, List.of(supplier), Supplier[].class, (selectedRow instanceof Supplier && selectedRow != null));
+            writeToFile(SUPPLIER_MODEL, List.of(supplier), Supplier[].class,
+                    (selectedRow instanceof Supplier));
             clearSupplierFields();
         }
     }
@@ -203,7 +309,8 @@ public class MainController extends BaseController {
 
             delivery.setData(Double.parseDouble(deliveryAmount.getText()), deliveryDescription.getText(),
                     deliveryDate.getValue().format(formatter), comboSuppliers.getSelectionModel().getSelectedItem());
-            writeToFile(DELIVERY_MODEL, List.of(delivery), Delivery[].class, (selectedRow instanceof Delivery && selectedRow != null));
+            writeToFile(DELIVERY_MODEL, List.of(delivery), Delivery[].class,
+                    (selectedRow instanceof Delivery));
             clearDeliveryFields();
         }
     }
@@ -237,9 +344,9 @@ public class MainController extends BaseController {
     @FXML
     public void initialize() {
         Double moneyMade = deliveryList.stream().map(
-            Delivery::getAmount
-        ).reduce(0.0, Double::sum);
+                Delivery::getAmount).reduce(0.0, Double::sum);
 
+        billDateField.setText(LocalDate.now().toString());
         screenName.setText("Accueil");
         totalSupplier.setText(String.valueOf(supplierList.size()));
         totalDelivery.setText(String.valueOf(deliveryList.size()));
@@ -287,6 +394,7 @@ public class MainController extends BaseController {
         deliveriesTableView.setItems(filteredDeliveriesData);
 
         comboSuppliers.setItems(filteredSuppliersData);
+        homeComboSuppliers.setItems(filteredSuppliersData);
         comboSuppliers.setConverter(new StringConverter<Supplier>() {
             @Override
             public String toString(Supplier supplier) {
@@ -298,8 +406,27 @@ public class MainController extends BaseController {
                 return null;
             }
         });
+        homeComboSuppliers.setConverter(new StringConverter<Supplier>() {
+            @Override
+            public String toString(Supplier supplier) {
+                return supplier != null ? supplier.getName() : "";
+            }
+
+            @Override
+            public Supplier fromString(String string) {
+                return null;
+            }
+        });
+
         searchSupplier.setOnKeyReleased(e -> search(SUPPLIER_MODEL, searchSupplier, filteredSuppliersData));
         searchDelivery.setOnKeyReleased(e -> search(DELIVERY_MODEL, searchDelivery, filteredDeliveriesData));
+
+        addMerch.setOnKeyPressed(ev -> {
+            if (ev.getCode().equals(KeyCode.ENTER)) {
+                addMerch.fire();
+                ev.consume();
+            }
+        });
     }
 
     /**

@@ -1,12 +1,10 @@
 package com.devway.model;
 
-import java.time.LocalDate;
-
 
 public class Bill {
     static int billCount = 0;
     private Supplier supplier;
-    private LocalDate date;
+    private String date;
     private Delivery delivery;
     private int billID;
 
@@ -19,6 +17,12 @@ public class Bill {
     }
 
     // Getters and Setters
+    public void setData(Supplier supplier, String date, Delivery delivery) {
+        this.supplier = supplier;
+        this.date = date;
+        this.delivery = delivery;
+    }
+
     public Supplier getSupplier() {
         return supplier;
     }
@@ -27,11 +31,11 @@ public class Bill {
         this.supplier = supplier;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

@@ -32,9 +32,6 @@
   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 
-<?import javafx.scene.chart.BarChart?>
-<?import javafx.scene.chart.CategoryAxis?>
-<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
@@ -107,7 +104,7 @@
                            <children>
                               <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="138.0" prefWidth="894.0">
                                  <children>
-                                    <AnchorPane layoutX="15.2" layoutY="24.0" prefHeight="112.0" prefWidth="182.0" style="-fx-background-color: #E8E8E8; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, #3333, 100, 0, 0, 2);" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="698.0" AnchorPane.topAnchor="24.0">
+                                    <AnchorPane layoutX="15.2" layoutY="24.0" prefHeight="112.0" prefWidth="181.0" style="-fx-background-color: #E8E8E8; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, #3333, 100, 0, 0, 2);" AnchorPane.bottomAnchor="2.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="698.0" AnchorPane.topAnchor="24.0">
                                        <children>
                                           <Label layoutX="16.0" layoutY="7.0" prefHeight="41.0" prefWidth="148.0" text="Nombres de fournisseurs" underline="true" wrapText="true">
                                              <font>
@@ -149,33 +146,63 @@
                                           </Label>
                                        </children>
                                     </AnchorPane>
-                                    <AnchorPane layoutX="675.0" layoutY="3.0" prefHeight="154.0" prefWidth="215.0">
-                                       <children>
-                                          <Button fx:id="addDelivery" layoutX="28.0" layoutY="26.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="160.0" text="Enregistrer une livraison" />
-                                          <Button fx:id="addSupplier" layoutX="28.0" layoutY="84.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="160.0" text="Enregistrer un fournisseur" />
-                                       </children>
-                                    </AnchorPane>
                                  </children>
                               </AnchorPane>
-                              <BarChart layoutX="22.0" layoutY="185.0" prefHeight="334.0" prefWidth="444.0">
-                                <xAxis>
-                                  <CategoryAxis side="BOTTOM" />
-                                </xAxis>
-                                <yAxis>
-                                  <NumberAxis side="LEFT" />
-                                </yAxis>
-                              </BarChart>
-                              <TableView layoutX="500.0" layoutY="254.0" prefHeight="225.0" prefWidth="373.0">
-                                <columns>
-                                  <TableColumn prefWidth="75.0" text="C1" />
-                                  <TableColumn fx:id="last5TableView" editable="false" prefWidth="75.0" text="C2" />
-                                </columns>
-                              </TableView>
-                              <Label layoutX="501.0" layoutY="210.0" prefHeight="33.0" prefWidth="374.0" text="Récentes livraison - 5 dernières">
-                                 <font>
-                                    <Font name="System Bold Italic" size="14.0" />
-                                 </font>
-                              </Label>
+                              <AnchorPane layoutX="25.0" layoutY="171.0" prefHeight="344.0" prefWidth="873.0">
+                                 <children>
+                                    <TextField fx:id="merchName" layoutX="34.0" layoutY="90.0" prefHeight="36.0" prefWidth="361.0" />
+                                    <Label layoutX="34.0" layoutY="25.0" text="Marchandise">
+                                       <font>
+                                          <Font name="System Bold Italic" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="34.0" layoutY="70.0" text="Nom">
+                                       <font>
+                                          <Font size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="merchPrice" layoutX="34.0" layoutY="163.0" prefHeight="36.0" prefWidth="193.0" />
+                                    <Label layoutX="34.0" layoutY="143.0" text="Prix unitaire">
+                                       <font>
+                                          <Font size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="merchQt" layoutX="246.0" layoutY="163.0" prefHeight="36.0" prefWidth="149.0" />
+                                    <Label layoutX="247.0" layoutY="143.0" text="Quantité">
+                                       <font>
+                                          <Font size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <Label layoutX="528.0" layoutY="70.0" text="Fournisseur">
+                                       <font>
+                                          <Font name="System Bold Italic" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <ComboBox fx:id="homeComboSuppliers" layoutX="525.0" layoutY="92.0" prefHeight="41.0" prefWidth="183.0" />
+                                    <Label fx:id="billDateField" alignment="CENTER_RIGHT" layoutX="681.0" layoutY="22.0" prefHeight="25.0" prefWidth="170.0" text="Date">
+                                       <font>
+                                          <Font size="14.0" />
+                                       </font></Label>
+                                    <Label layoutX="525.0" layoutY="151.0" text="Total">
+                                       <font>
+                                          <Font name="System Bold Italic" size="13.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="billTotal" alignment="CENTER" disable="true" layoutX="525.0" layoutY="170.0" prefHeight="41.0" prefWidth="293.0" style="-fx-border-color: transparent;">
+                                       <font>
+                                          <Font name="System Bold" size="18.0" />
+                                       </font>
+                                    </TextField>
+                                    <Button fx:id="homeClearFields" onAction="#homeClearFields" layoutX="203.0" layoutY="242.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="138.0" text="Vider les champs" />
+                                    <Button fx:id="addBill" onAction="#addBill" layoutX="525.0" layoutY="242.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="138.0" style="-fx-background-color: #0171B7;" text="Enregistrer" textFill="WHITE" />
+                                    <Button fx:id="printBill" onAction="#printBill" layoutX="681.0" layoutY="242.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="138.0" style="-fx-background-color: #E8E8E8; -fx-border-color: black;" text="Imprimer">
+                                       <font>
+                                          <Font name="System Bold" size="12.0" />
+                                       </font>
+                                    </Button>
+                                    <Button fx:id="addMerch" onAction="#addMerch" layoutX="33.0" layoutY="242.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="138.0" text="Ajouter à la facture" />
+                                 </children>
+                              </AnchorPane>
                            </children>
                         </AnchorPane>
                         <AnchorPane fx:id="supplierScreen" layoutX="14.0" layoutY="14.0" prefHeight="535.0" prefWidth="922.0" style="-fx-background-radius: 10; -fx-background-color: #E9E9E9; -fx-border-radius: 10;" visible="false">

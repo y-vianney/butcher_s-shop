@@ -1,1 +1,28 @@
-[{"description":"Something","deliveryDate":"20/09/2024","amount":125000.0,"supplier":{"name":"Yann","contact":"0554604510","address":"Abidjan","supplierID":1},"supplierName":"Yann","deliveryID":1}]
+[
+    {
+        "description": "Something",
+        "deliveryDate": "20/09/2024",
+        "amount": 125000.0,
+        "supplier": {
+            "name": "Yann",
+            "contact": "0554604510",
+            "address": "Abidjan",
+            "supplierID": 1
+        },
+        "supplierName": "Yann",
+        "deliveryID": 1
+    },
+    {
+        "description": " Viande: 50;",
+        "deliveryDate": "2024-09-25",
+        "amount": 250000.0,
+        "supplier": {
+            "name": "Axel",
+            "contact": "0102030405",
+            "address": "Anyama",
+            "supplierID": 4
+        },
+        "supplierName": "Axel",
+        "deliveryID": 6
+    }
+]

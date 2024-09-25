@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -17,6 +18,7 @@ import java.util.stream.Stream;
 
 import com.devway.model.Bill;
 import com.devway.model.Delivery;
+import com.devway.model.MerchandiseStore;
 import com.devway.model.Supplier;
 import com.google.gson.Gson;
 
@@ -27,6 +29,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 
 public class BaseController {
+    //  pattern: DateTimeFormatter.ofPattern("dd MMMM yyyy - HH'h'mm", Locale.FRENCH)
     final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     static final String SUPPLIER_MODEL = "supplier";
     static final String DELIVERY_MODEL = "delivery";
@@ -36,6 +39,8 @@ public class BaseController {
     protected Alert alert;
 
     Object selectedRow = null;
+    MerchandiseStore merchStore = new MerchandiseStore();
+    Double totalBill = 0.0;
 
     ObservableList<Supplier> supplierList = FXCollections
             .observableArrayList(readData(SUPPLIER_MODEL, Supplier[].class));
@@ -119,14 +124,6 @@ public class BaseController {
                             existingSupplier.getContact().equals(newSupplier.getContact())) {
                         return true;
                     }
-                } else if (item instanceof Delivery && data instanceof Delivery) {
-                    Delivery existingDelivery = (Delivery) item;
-                    Delivery newDelivery = (Delivery) data;
-
-                    if (existingDelivery.getDeliveryDate().equals(newDelivery.getDeliveryDate()) ||
-                            existingDelivery.getSupplier().getName().equals(newDelivery.getSupplier().getName())) {
-                        return true;
-                    }
                 }
             }
         }
@@ -154,7 +151,7 @@ public class BaseController {
     protected <T> boolean removeOne(String model, Class<T[]> clazz, T data) {
         List<T> fileData = this.readData(model, clazz);
 
-        if (this.isRemovable(model, data, fileData)) {
+        if (this.isRemovable(model, data)) {
             if (fileData != null) {
                 List<T> updatedList = new ArrayList<>();
                 boolean itemRemoved = false;
@@ -201,7 +198,7 @@ public class BaseController {
         return false;
     }
 
-    protected <T> boolean isRemovable(String model, T current, List<T> others) {
+    protected <T> boolean isRemovable(String model, T current) {
         Map<String, Function<T, Boolean>> modelCheckers = new HashMap<>();
         modelCheckers.put(SUPPLIER_MODEL, cur -> isCurrentLinkedToSupplier(cur));
         modelCheckers.put(DELIVERY_MODEL, cur -> isCurrentLinkedToDelivery(cur));
