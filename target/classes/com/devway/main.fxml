@@ -105,59 +105,59 @@
                         <Line endY="489.0" layoutY="41.0" opacity="0.3" startY="-19.0" strokeWidth="0.2" />
                         <AnchorPane fx:id="homeScreen" layoutX="14.0" layoutY="14.0" prefHeight="532.0" prefWidth="923.0" style="-fx-background-color: #E9E9E9; -fx-background-radius: 5; -fx-border-radius: 5;" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
                            <children>
-                              <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="170.0" prefWidth="893.0">
+                              <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="138.0" prefWidth="894.0">
                                  <children>
-                                    <AnchorPane layoutX="8.0" layoutY="8.0" prefHeight="155.0" prefWidth="183.0" style="-fx-background-color: #E8E8E8; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, #3333, 100, 0, 0, 2);" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="702.0" AnchorPane.topAnchor="8.0">
+                                    <AnchorPane layoutX="15.2" layoutY="24.0" prefHeight="112.0" prefWidth="182.0" style="-fx-background-color: #E8E8E8; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, #3333, 100, 0, 0, 2);" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="698.0" AnchorPane.topAnchor="24.0">
                                        <children>
                                           <Label layoutX="16.0" layoutY="7.0" prefHeight="41.0" prefWidth="148.0" text="Nombres de fournisseurs" underline="true" wrapText="true">
                                              <font>
                                                 <Font name="System Bold" size="13.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="totalSupplier" alignment="CENTER" contentDisplay="CENTER" layoutX="49.0" layoutY="68.0" prefHeight="73.0" prefWidth="120.0" text="0">
+                                          <Label fx:id="totalSupplier" alignment="CENTER" contentDisplay="CENTER" layoutX="13.0" layoutY="55.0" prefHeight="44.0" prefWidth="155.0" text="0">
                                              <font>
                                                 <Font name="System Bold" size="24.0" />
                                              </font>
                                           </Label>
                                        </children>
                                     </AnchorPane>
-                                    <AnchorPane layoutX="233.0" layoutY="8.0" prefHeight="155.0" prefWidth="183.0" style="-fx-background-color: #E8E8E8; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, #3333, 100, 0, 0, 2);">
+                                    <AnchorPane layoutX="239.0" layoutY="24.0" prefHeight="112.0" prefWidth="183.0" style="-fx-background-color: #E8E8E8; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, #3333, 100, 0, 0, 2);">
                                        <children>
                                           <Label layoutX="16.0" layoutY="7.0" prefHeight="30.0" prefWidth="148.0" text="Nombres de livraisons" underline="true" wrapText="true">
                                              <font>
                                                 <Font name="System Bold" size="13.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="totalDelivery" alignment="CENTER" contentDisplay="CENTER" layoutX="49.0" layoutY="68.0" prefHeight="73.0" prefWidth="120.0" text="0">
+                                          <Label fx:id="totalDelivery" alignment="CENTER" contentDisplay="CENTER" layoutX="15.0" layoutY="56.0" prefHeight="42.0" prefWidth="154.0" text="0">
                                              <font>
                                                 <Font name="System Bold" size="24.0" />
                                              </font>
                                           </Label>
                                        </children>
                                     </AnchorPane>
-                                    <AnchorPane layoutX="454.0" layoutY="8.0" prefHeight="155.0" prefWidth="183.0" style="-fx-background-color: #E8E8E8; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, #3333, 100, 0, 0, 2);">
+                                    <AnchorPane layoutX="460.0" layoutY="24.0" prefHeight="111.0" prefWidth="183.0" style="-fx-background-color: #E8E8E8; -fx-border-radius: 10; -fx-background-radius: 10; -fx-effect: dropshadow(three-pass-box, #3333, 100, 0, 0, 2);">
                                        <children>
                                           <Label layoutX="16.0" layoutY="10.0" prefHeight="30.0" prefWidth="148.0" text="Profit" underline="true" wrapText="true">
                                              <font>
                                                 <Font name="System Bold" size="13.0" />
                                              </font>
                                           </Label>
-                                          <Label fx:id="profit" alignment="CENTER" contentDisplay="CENTER" layoutX="53.0" layoutY="68.0" prefHeight="73.0" prefWidth="120.0" text="0">
+                                          <Label fx:id="profit" alignment="CENTER" contentDisplay="CENTER" layoutX="12.0" layoutY="59.0" prefHeight="36.0" prefWidth="161.0" text="0">
                                              <font>
                                                 <Font name="System Bold" size="24.0" />
                                              </font>
                                           </Label>
                                        </children>
                                     </AnchorPane>
-                                    <AnchorPane layoutX="670.0" layoutY="8.0" prefHeight="154.0" prefWidth="215.0">
+                                    <AnchorPane layoutX="675.0" layoutY="3.0" prefHeight="154.0" prefWidth="215.0">
                                        <children>
-                                          <Button fx:id="addDelivery" layoutX="28.0" layoutY="24.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="160.0" text="Enregistrer une livraison" />
-                                          <Button fx:id="addSupplier" layoutX="28.0" layoutY="90.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="160.0" text="Enregistrer un fournisseur" />
+                                          <Button fx:id="addDelivery" layoutX="28.0" layoutY="26.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="160.0" text="Enregistrer une livraison" />
+                                          <Button fx:id="addSupplier" layoutX="28.0" layoutY="84.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="160.0" text="Enregistrer un fournisseur" />
                                        </children>
                                     </AnchorPane>
                                  </children>
                               </AnchorPane>
-                              <BarChart layoutX="22.0" layoutY="209.0" prefHeight="310.0" prefWidth="444.0">
+                              <BarChart layoutX="22.0" layoutY="185.0" prefHeight="334.0" prefWidth="444.0">
                                 <xAxis>
                                   <CategoryAxis side="BOTTOM" />
                                 </xAxis>
@@ -165,15 +165,15 @@
                                   <NumberAxis side="LEFT" />
                                 </yAxis>
                               </BarChart>
-                              <TableView layoutX="500.0" layoutY="260.0" prefHeight="225.0" prefWidth="373.0">
+                              <TableView layoutX="500.0" layoutY="254.0" prefHeight="225.0" prefWidth="373.0">
                                 <columns>
                                   <TableColumn prefWidth="75.0" text="C1" />
                                   <TableColumn fx:id="last5TableView" editable="false" prefWidth="75.0" text="C2" />
                                 </columns>
                               </TableView>
-                              <Label layoutX="516.0" layoutY="225.0" prefHeight="33.0" prefWidth="374.0" text="Récentes livraison - 5 dernières">
+                              <Label layoutX="501.0" layoutY="210.0" prefHeight="33.0" prefWidth="374.0" text="Récentes livraison - 5 dernières">
                                  <font>
-                                    <Font size="14.0" />
+                                    <Font name="System Bold Italic" size="14.0" />
                                  </font>
                               </Label>
                            </children>
