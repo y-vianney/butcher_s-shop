@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.devway.model.Bill;
 import com.devway.model.Delivery;
@@ -64,8 +66,7 @@ public class BaseController {
             // Combine existing data with new data if not overwriting
             if (!overwrite) {
                 if (existingData != null) {
-                    System.out.println(existingData);
-                    existingData.addAll(data);
+                    existingData = Stream.concat(existingData.stream(), data.stream()).collect(Collectors.toList());
                     data = existingData;
                 } else {
                     data = new ArrayList<>(data);
@@ -80,17 +81,20 @@ public class BaseController {
                 switch (model) {
                     case SUPPLIER_MODEL:
                         supplierList.clear();
-                        supplierList.addAll(readData(SUPPLIER_MODEL, Supplier[].class));
+                        supplierList = FXCollections
+                                .observableArrayList(readData(SUPPLIER_MODEL, Supplier[].class));
                         break;
 
                     case DELIVERY_MODEL:
                         deliveryList.clear();
-                        deliveryList.addAll(readData(DELIVERY_MODEL, Delivery[].class));
+                        deliveryList = FXCollections
+                                .observableArrayList(readData(DELIVERY_MODEL, Delivery[].class));
                         break;
 
                     case BILL_MODEL:
                         billList.clear();
-                        billList.addAll(readData(BILL_MODEL, Bill[].class));
+                        billList = FXCollections
+                                .observableArrayList(readData(BILL_MODEL, Bill[].class));
                         break;
 
                     default:
@@ -161,8 +165,25 @@ public class BaseController {
                         Supplier supplierToDelete = (Supplier) data;
     
                         // Check for matches based on name or contact
-                        if (existingSupplier.getName().equals(supplierToDelete.getName()) ||
-                                existingSupplier.getContact().equals(supplierToDelete.getContact())) {
+                        if (existingSupplier.getSupplierID() == supplierToDelete.getSupplierID()) {
+                            itemRemoved = true;
+                            continue;
+                        }
+                    } else if (item instanceof Delivery && data instanceof Delivery) {
+                        Delivery existingDelivery = (Delivery) item;
+                        Delivery deliveryToDelete = (Delivery) data;
+
+                        // Check for matches based on name or contact
+                        if (existingDelivery.getDeliveryID() == deliveryToDelete.getDeliveryID()) {
+                            itemRemoved = true;
+                            continue;
+                        }
+                    } else {
+                        Bill existingBill = (Bill) item;
+                        Bill billToDelete = (Bill) data;
+
+                        // Check for matches based on name or contact
+                        if (existingBill.getBillID() == billToDelete.getBillID()) {
                             itemRemoved = true;
                             continue;
                         }

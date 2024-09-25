@@ -1,7 +1,6 @@
 package com.devway.ui.controllers;
 
 import javafx.collections.transformation.FilteredList;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
@@ -13,7 +12,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-import com.devway.model.Bill;
+//import com.devway.model.Bill;
 import com.devway.model.Delivery;
 import com.devway.model.Supplier;
 import javafx.util.StringConverter;
@@ -46,6 +45,18 @@ public class MainController extends BaseController {
 
     @FXML
     public TableColumn<Delivery, String> dateDeliveryCol;
+
+    @FXML
+    public Label totalSupplier;
+
+    @FXML
+    public Label totalDelivery;
+
+    @FXML
+    public Label profit;
+
+    @FXML
+    private Label screenName;
 
     @FXML
     private AnchorPane homeScreen;
@@ -108,7 +119,7 @@ public class MainController extends BaseController {
     private FilteredList<Delivery> filteredDeliveriesData;
 
     // Bill elements
-    private FilteredList<Bill> filteredBillsData;
+//    private FilteredList<Bill> filteredBillsData;
 
     private List<AnchorPane> screenList;
 
@@ -116,22 +127,28 @@ public class MainController extends BaseController {
     // Navigators
     @FXML
     private void switchToHome() throws IOException {
+        screenName.setText("Accueil");
+
         switchTo(homeScreen, screenList);
     }
 
     @FXML
     private void switchToSupplierScreen() throws IOException {
+        screenName.setText("Gestion des fournisseurs");
+
         switchTo(supplierScreen, screenList);
     }
 
     @FXML
     private void switchToDeliveryScreen() throws IOException {
+        screenName.setText("Gestion des livraisons");
+
         switchTo(deliveryScreen, screenList);
     }
 
     @FXML
     private void switchToBillScreen() throws IOException {
-        //
+        screenName.setText("Gestion des factures");
     }
 
     // Authentication
@@ -148,7 +165,8 @@ public class MainController extends BaseController {
             Supplier supplier = new Supplier();
 
             supplier.setData(nameSupplier.getText(), contactSupplier.getText(), addressSupplier.getText());
-            writeToFile(SUPPLIER_MODEL, Arrays.asList(supplier), Supplier[].class, (selectedRow != null));
+            writeToFile(SUPPLIER_MODEL, List.of(supplier), Supplier[].class, (selectedRow instanceof Supplier && selectedRow != null));
+            clearSupplierFields();
         }
     }
 
@@ -161,22 +179,20 @@ public class MainController extends BaseController {
 
     @FXML
     private void delSupplier() throws IOException {
-        try {
-            Supplier data = suppliersTableView.getSelectionModel().getSelectedItem();
-            boolean isRemoved = removeOne(SUPPLIER_MODEL, Supplier[].class, data);
+        Supplier data = suppliersTableView.getSelectionModel().getSelectedItem();
+        boolean isRemoved = removeOne(SUPPLIER_MODEL, Supplier[].class, data);
 
-            Alert alert;
-            if (isRemoved) {
-                alert = new Alert(AlertType.CONFIRMATION);
-                alert.setContentText("L'enregistrement a été supprimé.");
-            } else {
-                alert = new Alert(AlertType.ERROR);
-                alert.setContentText("Une erreur s'est produite lors de la suppression de l'enregistrement.");
-            }
-            alert.showAndWait();
-        } catch (Exception e) {
-            System.err.println(e);
+        Alert alert;
+        if (isRemoved) {
+            alert = new Alert(AlertType.CONFIRMATION);
+            alert.setContentText("L'enregistrement a été supprimé.");
+        } else {
+            alert = new Alert(AlertType.ERROR);
+            alert.setContentText("Une erreur s'est produite lors de la suppression de l'enregistrement.");
         }
+        alert.showAndWait();
+
+        clearSupplierFields();
     }
 
     // Delivery
@@ -187,33 +203,48 @@ public class MainController extends BaseController {
 
             delivery.setData(Double.parseDouble(deliveryAmount.getText()), deliveryDescription.getText(),
                     deliveryDate.getValue().format(formatter), comboSuppliers.getSelectionModel().getSelectedItem());
-            writeToFile(DELIVERY_MODEL, Arrays.asList(delivery), Delivery[].class, false);
+            writeToFile(DELIVERY_MODEL, List.of(delivery), Delivery[].class, (selectedRow instanceof Delivery && selectedRow != null));
+            clearDeliveryFields();
         }
     }
 
     @FXML
     private void delDelivery() throws IOException {
-        try {
-            Delivery data = deliveriesTableView.getSelectionModel().getSelectedItem();
-            boolean isRemoved = removeOne(DELIVERY_MODEL, Delivery[].class, data);
+        Delivery data = deliveriesTableView.getSelectionModel().getSelectedItem();
+        boolean isRemoved = removeOne(DELIVERY_MODEL, Delivery[].class, data);
 
-            Alert alert;
-            if (isRemoved) {
-                alert = new Alert(AlertType.CONFIRMATION);
-                alert.setContentText("L'enregistrement a été supprimé.");
-            } else {
-                alert = new Alert(AlertType.ERROR);
-                alert.setContentText("Une erreur s'est produite lors de la suppression de l'enregistrement.");
-            }
-            alert.showAndWait();
-        } catch (Exception e) {
-            System.err.println(e);
+        Alert alert;
+        if (isRemoved) {
+            alert = new Alert(AlertType.CONFIRMATION);
+            alert.setContentText("L'enregistrement a été supprimé.");
+        } else {
+            alert = new Alert(AlertType.ERROR);
+            alert.setContentText("Une erreur s'est produite lors de la suppression de l'enregistrement.");
         }
+        alert.showAndWait();
+
+        clearDeliveryFields();
+    }
+
+    @FXML
+    private void clearDeliveryFields() throws IOException {
+        contactSupplier.setText(null);
+        nameSupplier.setText(null);
+        addressSupplier.setText(null);
     }
 
     // init method
     @FXML
     public void initialize() {
+        Double moneyMade = deliveryList.stream().map(
+            Delivery::getAmount
+        ).reduce(0.0, Double::sum);
+
+        screenName.setText("Accueil");
+        totalSupplier.setText(String.valueOf(supplierList.size()));
+        totalDelivery.setText(String.valueOf(deliveryList.size()));
+        profit.setText(String.valueOf(moneyMade));
+
         screenList = Arrays.asList(homeScreen, supplierScreen, deliveryScreen);
         filteredSuppliersData = new FilteredList<>(supplierList, n -> true);
         filteredDeliveriesData = new FilteredList<>(deliveryList, n -> true);
@@ -223,6 +254,7 @@ public class MainController extends BaseController {
             row.setOnMouseClicked(event -> {
                 if (!row.isEmpty()) {
                     selectedRow = row.getItem();
+                    showSelectedData();
                 }
             });
 
@@ -234,24 +266,12 @@ public class MainController extends BaseController {
             row.setOnMouseClicked(event -> {
                 if (!row.isEmpty()) {
                     selectedRow = row.getItem();
+                    showSelectedData();
                 }
             });
 
             return row;
         });
-
-        if (selectedRow != null) {
-            if (selectedRow instanceof Supplier) {
-                nameSupplier.setText(((Supplier) selectedRow).getName());
-                contactSupplier.setText(((Supplier) selectedRow).getContact());
-                addressSupplier.setText(((Supplier) selectedRow).getAddress());
-            } else if (selectedRow instanceof Delivery) {
-                deliveryDescription.setText(((Delivery) selectedRow).getDescription());
-                deliveryAmount.setText(String.valueOf(((Delivery) selectedRow).getAmount()));
-                deliveryDate.setValue(LocalDate.parse(((Delivery) selectedRow).getDescription()));
-                comboSuppliers.getSelectionModel().select(((Delivery) selectedRow).getSupplier());
-            }
-        }
 
         idSupplierCol.setCellValueFactory(new PropertyValueFactory<>("supplierID"));
         nameSupplierCol.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -279,6 +299,7 @@ public class MainController extends BaseController {
             }
         });
         searchSupplier.setOnKeyReleased(e -> search(SUPPLIER_MODEL, searchSupplier, filteredSuppliersData));
+        searchDelivery.setOnKeyReleased(e -> search(DELIVERY_MODEL, searchDelivery, filteredDeliveriesData));
     }
 
     /**
@@ -301,5 +322,18 @@ public class MainController extends BaseController {
                     return false;
             }
         });
+    }
+
+    private void showSelectedData() {
+        if (selectedRow instanceof Supplier) {
+            nameSupplier.setText(((Supplier) selectedRow).getName());
+            contactSupplier.setText(((Supplier) selectedRow).getContact());
+            addressSupplier.setText(((Supplier) selectedRow).getAddress());
+        } else if (selectedRow instanceof Delivery) {
+            deliveryDescription.setText(((Delivery) selectedRow).getDescription());
+            deliveryAmount.setText(String.valueOf(((Delivery) selectedRow).getAmount()));
+            deliveryDate.setValue(LocalDate.parse(((Delivery) selectedRow).getDeliveryDate(), formatter));
+            comboSuppliers.getSelectionModel().select(((Delivery) selectedRow).getSupplier());
+        }
     }
 }
