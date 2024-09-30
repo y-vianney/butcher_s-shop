@@ -1,7 +1,5 @@
 package com.devway.model;
 
-import java.time.LocalDate;
-
 
 public class Delivery {
     static int deliveryCount = 0;

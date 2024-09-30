@@ -5,6 +5,7 @@ public class Merchandise {
     private String name;
     private double price;
     private int quantity;
+    private int deliveryID;
 
     // Constructor
     public Merchandise(String name, double price, int quantity) {
@@ -36,5 +37,13 @@ public class Merchandise {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public int getDeliveryID() {
+        return deliveryID;
+    }
+
+    public void setDeliveryID(int deliveryID) {
+        this.deliveryID = deliveryID;
     }
 }

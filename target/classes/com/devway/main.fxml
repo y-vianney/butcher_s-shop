@@ -100,7 +100,7 @@
                   <AnchorPane fx:id="screenBox" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                      <children>
                         <Line endY="489.0" layoutY="41.0" opacity="0.3" startY="-19.0" strokeWidth="0.2" />
-                        <AnchorPane fx:id="homeScreen" layoutX="14.0" layoutY="14.0" prefHeight="532.0" prefWidth="923.0" style="-fx-background-color: #E9E9E9; -fx-background-radius: 5; -fx-border-radius: 5;" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
+                        <AnchorPane fx:id="homeScreen" layoutX="14.0" layoutY="14.0" prefHeight="532.0" prefWidth="923.0" style="-fx-background-color: #E9E9E9; -fx-background-radius: 5; -fx-border-radius: 5;" visible="false" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="14.0" AnchorPane.rightAnchor="14.0" AnchorPane.topAnchor="14.0">
                            <children>
                               <AnchorPane layoutX="14.0" layoutY="14.0" prefHeight="138.0" prefWidth="894.0">
                                  <children>
@@ -193,14 +193,14 @@
                                           <Font name="System Bold" size="18.0" />
                                        </font>
                                     </TextField>
-                                    <Button fx:id="homeClearFields" onAction="#homeClearFields" layoutX="203.0" layoutY="242.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="138.0" text="Vider les champs" />
-                                    <Button fx:id="addBill" onAction="#addBill" layoutX="525.0" layoutY="242.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="138.0" style="-fx-background-color: #0171B7;" text="Enregistrer" textFill="WHITE" />
-                                    <Button fx:id="printBill" onAction="#printBill" layoutX="681.0" layoutY="242.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="138.0" style="-fx-background-color: #E8E8E8; -fx-border-color: black;" text="Imprimer">
+                                    <Button fx:id="homeClearFields" layoutX="203.0" layoutY="242.0" mnemonicParsing="false" onAction="#homeClearFields" prefHeight="42.0" prefWidth="138.0" text="Vider les champs" />
+                                    <Button fx:id="addBill" layoutX="525.0" layoutY="242.0" mnemonicParsing="false" onAction="#addBill" prefHeight="42.0" prefWidth="138.0" style="-fx-background-color: #0171B7;" text="Enregistrer" textFill="WHITE" />
+                                    <Button fx:id="printBill" layoutX="681.0" layoutY="242.0" mnemonicParsing="false" onAction="#printBill" prefHeight="42.0" prefWidth="138.0" style="-fx-background-color: #E8E8E8; -fx-border-color: black;" text="Imprimer">
                                        <font>
                                           <Font name="System Bold" size="12.0" />
                                        </font>
                                     </Button>
-                                    <Button fx:id="addMerch" onAction="#addMerch" layoutX="33.0" layoutY="242.0" mnemonicParsing="false" prefHeight="42.0" prefWidth="138.0" text="Ajouter à la facture" />
+                                    <Button fx:id="addMerch" layoutX="33.0" layoutY="242.0" mnemonicParsing="false" onAction="#addMerch" prefHeight="42.0" prefWidth="138.0" text="Ajouter à la facture" />
                                  </children>
                               </AnchorPane>
                            </children>

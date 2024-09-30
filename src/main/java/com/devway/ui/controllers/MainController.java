@@ -8,16 +8,17 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import com.devway.model.Constants;
 
 import com.devway.model.Bill;
 import com.devway.model.Delivery;
 import com.devway.model.Merchandise;
-import com.devway.model.MerchandiseStore;
 import com.devway.model.Supplier;
 import javafx.util.StringConverter;
 
@@ -93,8 +94,6 @@ public class MainController extends BaseController {
     @FXML
     private TableView<Supplier> suppliersTableView;
 
-    private FilteredList<Supplier> filteredSuppliersData;
-
     // Delivery elements
     @FXML
     private TextArea deliveryDescription;
@@ -119,8 +118,6 @@ public class MainController extends BaseController {
 
     @FXML
     private TableView<Delivery> deliveriesTableView;
-
-    private FilteredList<Delivery> filteredDeliveriesData;
 
     // Bill elements
     @FXML
@@ -185,7 +182,7 @@ public class MainController extends BaseController {
 
     // Authentication
     @FXML
-    private void logout() throws IOException {
+    private void logout() {
         //
     }
 
@@ -205,16 +202,14 @@ public class MainController extends BaseController {
                 homeClearFields();
 
                 totalBill += price * qt;
-            } catch (Exception e) {
-                // System.err.println(e);
-                if (e instanceof NumberFormatException) {
-                    alert = new Alert(AlertType.ERROR);
-                    alert.setContentText("Le prix et la quantité doivent être des nombres.");
-                }
+            } catch (NumberFormatException e) {
+                alert = new Alert(AlertType.ERROR);
+                alert.setContentText("Le prix et la quantité doivent être des nombres.");
             }
         }
 
-        if (alert != null) alert.showAndWait();
+        if (alert != null)
+            alert.showAndWait();
         billTotal.setText(String.valueOf(totalBill) + " F");
     }
 
@@ -227,16 +222,19 @@ public class MainController extends BaseController {
             Supplier supplier = homeComboSuppliers.getSelectionModel().getSelectedItem();
 
             for (Map.Entry<String, Merchandise> entry : merchStore.getStore().entrySet()) {
-                deliveryDesc += " " + entry.getValue().getName() + ": " + entry.getValue().getQuantity() + ";";
+                // deliveryDesc += " " + entry.getValue().getName() + ": " + entry.getValue().getQuantity() + ";";
                 amount += entry.getValue().getPrice() * entry.getValue().getQuantity();
+
+                entry.getValue().setDeliveryID(delivery.getDeliveryID());
+                writeToFile(Constants.MERCHANDISE_MODEL, List.of(entry.getValue()), Merchandise[].class, false);
             }
 
             delivery.setData(amount, deliveryDesc, billDateField.getText(), supplier);
-            writeToFile(DELIVERY_MODEL, List.of(delivery), Delivery[].class, false);
+            writeToFile(Constants.DELIVERY_MODEL, List.of(delivery), Delivery[].class, false);
 
             Bill bill = new Bill();
             bill.setData(supplier, billDateField.getText(), delivery);
-            writeToFile(BILL_MODEL, List.of(bill), Bill[].class, false);
+            writeToFile(Constants.BILL_MODEL, List.of(bill), Bill[].class, false);
 
             alert = new Alert(AlertType.INFORMATION);
             alert.setContentText("Facture enregistrée.");
@@ -251,8 +249,18 @@ public class MainController extends BaseController {
     }
 
     @FXML
-    private void printBill() {
-        merchStore.displayMerchandise(totalBill, 1000.0);
+    private void printBill() throws FileNotFoundException {
+        if (currBill == null) {
+            addBill();
+        }
+
+        if (currBill != null) {
+            TextArea billField = new TextArea();
+
+            String billOutput = merchStore.displayMerchandise(currBill.getDate(), currBill.getDelivery().getAmount(), 1000.0, currBill.getSupplier());
+            billField.setText(billOutput);
+            saveAsPdf(billOutput);
+        }
     }
 
     @FXML
@@ -270,7 +278,7 @@ public class MainController extends BaseController {
             Supplier supplier = new Supplier();
 
             supplier.setData(nameSupplier.getText(), contactSupplier.getText(), addressSupplier.getText());
-            writeToFile(SUPPLIER_MODEL, List.of(supplier), Supplier[].class,
+            writeToFile(Constants.SUPPLIER_MODEL, List.of(supplier), Supplier[].class,
                     (selectedRow instanceof Supplier));
             clearSupplierFields();
         }
@@ -286,7 +294,7 @@ public class MainController extends BaseController {
     @FXML
     private void delSupplier() throws IOException {
         Supplier data = suppliersTableView.getSelectionModel().getSelectedItem();
-        boolean isRemoved = removeOne(SUPPLIER_MODEL, Supplier[].class, data);
+        boolean isRemoved = removeOne(Constants.SUPPLIER_MODEL, Supplier[].class, data);
 
         Alert alert;
         if (isRemoved) {
@@ -308,8 +316,8 @@ public class MainController extends BaseController {
             Delivery delivery = new Delivery();
 
             delivery.setData(Double.parseDouble(deliveryAmount.getText()), deliveryDescription.getText(),
-                    deliveryDate.getValue().format(formatter), comboSuppliers.getSelectionModel().getSelectedItem());
-            writeToFile(DELIVERY_MODEL, List.of(delivery), Delivery[].class,
+                    deliveryDate.getValue().format(Constants.FORMATTER), comboSuppliers.getSelectionModel().getSelectedItem());
+            writeToFile(Constants.DELIVERY_MODEL, List.of(delivery), Delivery[].class,
                     (selectedRow instanceof Delivery));
             clearDeliveryFields();
         }
@@ -318,7 +326,7 @@ public class MainController extends BaseController {
     @FXML
     private void delDelivery() throws IOException {
         Delivery data = deliveriesTableView.getSelectionModel().getSelectedItem();
-        boolean isRemoved = removeOne(DELIVERY_MODEL, Delivery[].class, data);
+        boolean isRemoved = removeOne(Constants.DELIVERY_MODEL, Delivery[].class, data);
 
         Alert alert;
         if (isRemoved) {
@@ -343,6 +351,8 @@ public class MainController extends BaseController {
     // init method
     @FXML
     public void initialize() {
+        FilteredList<Delivery> filteredDeliveriesData;
+        FilteredList<Supplier> filteredSuppliersData;
         Double moneyMade = deliveryList.stream().map(
                 Delivery::getAmount).reduce(0.0, Double::sum);
 
@@ -418,8 +428,8 @@ public class MainController extends BaseController {
             }
         });
 
-        searchSupplier.setOnKeyReleased(e -> search(SUPPLIER_MODEL, searchSupplier, filteredSuppliersData));
-        searchDelivery.setOnKeyReleased(e -> search(DELIVERY_MODEL, searchDelivery, filteredDeliveriesData));
+        searchSupplier.setOnKeyReleased(e -> search(Constants.SUPPLIER_MODEL, searchSupplier, filteredSuppliersData));
+        searchDelivery.setOnKeyReleased(e -> search(Constants.DELIVERY_MODEL, searchDelivery, filteredDeliveriesData));
 
         addMerch.setOnKeyPressed(ev -> {
             if (ev.getCode().equals(KeyCode.ENTER)) {
@@ -438,10 +448,10 @@ public class MainController extends BaseController {
                 return true;
 
             switch (model) {
-                case SUPPLIER_MODEL:
+                case Constants.SUPPLIER_MODEL:
                     return ((Supplier) n).getName().contains(searchField.getText());
 
-                case DELIVERY_MODEL:
+                case Constants.DELIVERY_MODEL:
                     return ((Delivery) n).getSupplier().getName().contains(searchField.getText()) ||
                             ((Delivery) n).getAmount() == Double.parseDouble(searchField.getText());
 
@@ -459,7 +469,7 @@ public class MainController extends BaseController {
         } else if (selectedRow instanceof Delivery) {
             deliveryDescription.setText(((Delivery) selectedRow).getDescription());
             deliveryAmount.setText(String.valueOf(((Delivery) selectedRow).getAmount()));
-            deliveryDate.setValue(LocalDate.parse(((Delivery) selectedRow).getDeliveryDate(), formatter));
+            deliveryDate.setValue(LocalDate.parse(((Delivery) selectedRow).getDeliveryDate(), Constants.FORMATTER));
             comboSuppliers.getSelectionModel().select(((Delivery) selectedRow).getSupplier());
         }
     }

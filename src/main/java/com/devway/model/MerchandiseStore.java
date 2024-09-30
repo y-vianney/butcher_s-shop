@@ -26,31 +26,37 @@ public class MerchandiseStore {
     }
 
     // Method to display all merchandise
-    public void displayMerchandise(Double total, Double leftOver) {
-        System.out.println(
-            "------------------------------------------\n\n" +
-            "\t\t Boucherie \n" +
-            "\t No 00000 Abidjan Plateau \n" +
-            "\t       +225 0102000304 \n" +
-            "\n------------------------------------------\n" +
-            " Produits \t\t\t Montant \n"
-        );
-
+    public String displayMerchandise(String date, Double total, Double leftOver, Supplier supplier) {
+        StringBuilder output = new StringBuilder();
+    
+        output.append("-------------------------------------------------------------\n")
+              .append("                               Boucherie\n")
+              .append("                     No 00000 Abidjan Plateau\n")
+              .append("                          +225 0102000304\n")
+              .append("                             ").append(date).append("\n")
+              .append("                 Fournisseur: ").append(supplier.getName())
+              .append(" - ").append(supplier.getContact()).append("\n")
+              .append("-------------------------------------------------------------\n")
+              .append("   Produits                                              Montant\n")
+              .append("-------------------------------------------------------------\n  ");
+    
         for (Map.Entry<String, Merchandise> entry : merchandiseMap.entrySet()) {
-            System.out.println(
-                entry.getValue().getName() +
-                "\t " + entry.getValue().getQuantity() + " * " +
-                entry.getValue().getPrice() + "\t\t" +
-                (entry.getValue().getPrice() * entry.getValue().getQuantity())
-            );
+            output.append(entry.getValue().getName())
+                  .append("     ")
+                  .append(entry.getValue().getQuantity())
+                  .append(" X ")
+                  .append(entry.getValue().getPrice())
+                  .append("                         ")
+                  .append(entry.getValue().getPrice() * entry.getValue().getQuantity())
+                  .append("\n  ");
         }
-
-        System.out.println(
-            "------------------------------------------\n\n" +
-            " Montant total : \t\t" + total + "\n" +
-            " Reste à payer : \t\t" + leftOver + "\n" +
-            "\n------------------------------------------\n\n" +
-            "\t       A la prochaine."
-        );
+    
+        output.append("\n-------------------------------------------------------------\n")
+              .append("   Montant total :                               ").append(total).append("\n")
+              .append("   Reste à payer :                               ").append(leftOver).append("\n")
+              .append("-------------------------------------------------------------\n");
+    
+        return output.toString();
     }
+    
 }
